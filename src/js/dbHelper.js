@@ -1,4 +1,4 @@
-//const SITE_PREFIX = 'https://mar-bi.github.io/mws-restaurant-stage-1/';
+//const SITE_PREFIX = 'https://mar-bi.github.io/mws-restaurant-stage-2/';
 const SITE_PREFIX = '/';
 /**
  * Common database helper functions.
@@ -8,49 +8,32 @@ class DBHelper {
    * Database URL.
    */
   static get DATABASE_URL() {
-    return `${SITE_PREFIX}data/restaurants.json`;
+    return 'http://localhost:1337/restaurants';
   }
 
   /**
    * Fetch all restaurants.
    */
-  static fetchRestaurants(callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', DBHelper.DATABASE_URL);
-    xhr.onload = () => {
-      if (xhr.status === 200) {
-        // Got a success response from server!
-        const json = JSON.parse(xhr.responseText);
-        const restaurants = json.restaurants;
-        callback(null, restaurants);
-      } else {
-        // Oops!. Got an error from server.
-        const error = `Request failed. Returned status of ${xhr.status}`;
-        callback(error, null);
-      }
-    };
-    xhr.send();
+  static fetchRestaurants(callback, url = DBHelper.DATABASE_URL) {
+    fetch(url)
+      .then(response => response.json())
+      .then(respJson => callback(null, respJson))
+      .catch(err => callback(err, null));
   }
 
   /**
    * Fetch a restaurant by its ID.
    */
   static fetchRestaurantById(id, callback) {
-    // fetch all restaurants with proper error handling.
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
-        callback(error, null);
-      } else {
-        const restaurant = restaurants.find(r => r.id == id);
-        if (restaurant) {
-          // Got the restaurant
-          callback(null, restaurant);
-        } else {
-          // Restaurant does not exist in the database
-          callback('Restaurant does not exist', null);
-        }
+        return callback(error, null);
       }
-    });
+      const restaurant = restaurants.find(r => r.id == id);
+      return restaurant
+        ? callback(null, restaurant)
+        : callback('Restaurant does not exist', null);
+    }, DBHelper.DATABASE_URL);
   }
 
   /**
@@ -99,11 +82,11 @@ class DBHelper {
         callback(error, null);
       } else {
         let results = restaurants;
-        if (cuisine != 'all') {
+        if (cuisine != "all") {
           // filter by cuisine
           results = results.filter(r => r.cuisine_type == cuisine);
         }
-        if (neighborhood != 'all') {
+        if (neighborhood != "all") {
           // filter by neighborhood
           results = results.filter(r => r.neighborhood == neighborhood);
         }
@@ -162,26 +145,25 @@ class DBHelper {
   }
 
   /**
-   * Restaurant image URL.
+   * Get restaurant photo
    */
-  static imageUrlForRestaurant(restaurant) {
-    const filename = restaurant.photograph.replace('.', '-270.');
-    return `${SITE_PREFIX}images/${filename}`;
+  static getRestaurantPhotograph(restaurant) {
+    return restaurant.photograph || restaurant.id;
   }
 
   /**
-   * Slice restaurant image filename without file extension.
+   * Restaurant image URL.
    */
-  static imageFilenameForRestaurant(restaurant) {
-    const dotPosition = restaurant.photograph.indexOf('.');
-    return restaurant.photograph.slice(0, dotPosition);
+  static imageUrlForRestaurant(restaurant) {
+    const filename = `${DBHelper.getRestaurantPhotograph(restaurant)}-270.jpg`;
+    return `${SITE_PREFIX}images/${filename}`;
   }
 
   /**
    * Restaurant image srcset with x descriptors.
    */
   static imageSrcsetXForRestaurant(restaurant) {
-    const path = `${SITE_PREFIX}images/${DBHelper.imageFilenameForRestaurant(
+    const path = `${SITE_PREFIX}images/${DBHelper.getRestaurantPhotograph(
       restaurant
     )}`;
     return `${path}-270.jpg 1x, ${path}-540.jpg 2x`;
@@ -191,7 +173,7 @@ class DBHelper {
    * Restaurant image srcset with w descriptors.
    */
   static imageSrcsetWForRestaurant(restaurant) {
-    const path = `${SITE_PREFIX}images/${DBHelper.imageFilenameForRestaurant(
+    const path = `${SITE_PREFIX}images/${DBHelper.getRestaurantPhotograph(
       restaurant
     )}`;
     return `${path}-270.jpg 270w, ${path}-400.jpg 400w, ${path}-540.jpg 540w, ${path}-800.jpg 800w`;
