@@ -5,7 +5,7 @@
   "main": "",
   "scripts": {
     "dev": "python -m SimpleHTTPServer",
-    "sass": "sass --watch css/styles.scss:css/styles.css"
+    "sass": "sass --watch sass/styles.scss:sass/styles.css"
   },
   "repository": {
     "type": "git",
