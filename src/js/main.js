@@ -238,9 +238,7 @@ const addMarkersToMap = (restaurants = self.restaurants) => {
 const registerServiceWorker = () => {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker
-      .register('/mws-restaurant-stage-2/sw.js', {
-        scope: '/mws-restaurant-stage-2/'
-      })
+      .register('/sw.js')
       .then(registration => {
         console.log(
           `Registration is successful, the scope is ${registration.scope}`
