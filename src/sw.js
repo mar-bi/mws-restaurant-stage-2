@@ -1,6 +1,8 @@
 self.importScripts('./js/idb.js');
 
-// Testing SW on localhost
+/**
+ * Running SW on localhost
+ */
 const APP_PREFIX = 'rest-rev-app';
 const staticCacheVersion = 'v6';
 const mapsCacheVersion = 'v6';
@@ -10,7 +12,6 @@ const contentMapCache = `${APP_PREFIX}-maps-${mapsCacheVersion}`;
 const contentImagesCache = `${APP_PREFIX}-imgs-${imgCacheVersion}`;
 const allCaches = [staticCacheName, contentMapCache, contentImagesCache];
 
-//const REPO_PREFIX = '/mws-restaurant-stage-2/';
 const URLS = [
   '/',
   'restaurant.html',
@@ -70,7 +71,11 @@ self.addEventListener('fetch', event => {
 
   //serve a restaurant page
   if (requestUrl.pathname === '/restaurant.html') {
-    event.respondWith(caches.match('restaurant.html'));
+    event.respondWith(
+      caches.match('restaurant.html').then(response => {
+        return response || fetch(eventRequest);
+      })
+    );
     return;
   }
 
@@ -80,11 +85,11 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // event.respondWith(
-  //   caches.match(event.request).then(response => {
-  //     return response || fetch(event.request);
-  //   })
-  // );
+  event.respondWith(
+    caches.match(event.request).then(response => {
+      return response || fetch(event.request);
+    })
+  );
 });
 
 function cleanCache() {

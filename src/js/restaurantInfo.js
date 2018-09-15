@@ -5,6 +5,7 @@ var newMap;
  * Initialize map as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', () => {
+  registerServiceWorker();
   initRestaurantMap();
 });
 
@@ -202,4 +203,22 @@ const getParameterByName = (name, url) => {
   if (!results) return null;
   if (!results[2]) return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
+};
+
+/**
+ * Register Service Worker
+ */
+const registerServiceWorker = () => {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then(registration => {
+        console.log(
+          `Registration is successful, the scope is ${registration.scope}`
+        );
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
 };
