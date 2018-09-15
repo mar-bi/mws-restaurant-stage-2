@@ -18,13 +18,9 @@ Project features implemented at the **stage-2**:
  Tools used:
  - Eslint,
  - Prettier <sup>1</sup>.
-
-Link to [Restaurant Reviews App stage-2][2].
-
 ---
 
-<sup>1</sup> [Prettier VSCode plugin][3]
+<sup>1</sup> [Prettier VSCode plugin][2]
 
 [1]:SERVER.md
-[2]:https://mar-bi.github.io/mws-restaurant-stage-2/
-[3]:https://github.com/prettier/prettier-vscode
+[2]:https://github.com/prettier/prettier-vscode
