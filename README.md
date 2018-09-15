@@ -1,52 +1,30 @@
-# Local Development API Server
-## Usage
-#### Get Restaurants
-```
-curl "http://localhost:1337/restaurants"
-```
-#### Get Restaurants by id
-````
-curl "http://localhost:1337/restaurants/{3}"
-````
+# Restaurant Reviews App, stage-2
+A course project for **Mobile Web Specialist Certification Course** at *Udacity*.
 
-## Architecture
-Local server
-- Node.js
-- Sails.js
+The **stage-2** local server setup instructions [here][1] .
 
-## Contributors
+Project **stage-2** requirements:
+ - get and parse JSON data from server, use this data to generate the site UI,
+ - cache JSON response for offline use with IndexedDB API,
+ - achieve *Lighthouse* performance scores:
+    1. **Progressive Web App** score - at 90 or better.
+    2. **Performance** score  - at 70 or better.
+    3. **Accessibility** score - at 90 or better.
 
-- [Brandy Lee Camacho - Technical Project Manager](mailto:brandy.camacho@udacity.com)
-- [David Harris - Web Services Lead](mailto:david.harris@udacity.com)
-- [Omar Albeik - Frontend engineer](mailto:omaralbeik@gmail.com)
+Project features implemented at the **stage-2**:
+ - fetching JSON data from server with *FetchAPI*,
+ - service worker (caching JSON response and storing it an *IndexedDB*).
 
-## Getting Started
+ Tools used:
+ - Eslint,
+ - Prettier <sup>1</sup>.
 
-### Development local API Server
-_Location of server = /server_
-Server depends on [node.js LTS Version: v6.11.2 ](https://nodejs.org/en/download/), [npm](https://www.npmjs.com/get-npm), and [sails.js](http://sailsjs.com/)
-Please make sure you have these installed before proceeding forward.
+Link to [Restaurant Reviews App stage-2][2].
 
-Great, you are ready to proceed forward; awesome!
+---
 
-Let's start with running commands in your terminal, known as command line interface (CLI)
+<sup>1</sup> [Prettier VSCode plugin][3]
 
-###### Install project dependancies
-```Install project dependancies
-# npm i
-```
-###### Install Sails.js globally
-```Install sails global
-# npm i sails -g
-```
-###### Start the server
-```Start server
-# node server
-```
-### You should now have access to your API server environment
-debug: Environment : development
-debug: Port        : 1337
-
-
-If you find a bug in the source code or a mistake in the documentation, you can help us by
-submitting an issue to our [Waffle Dashboard](https://waffle.io/udacity/mwnd-issues). Even better you can submit a Pull Request with a fix :)
+[1]:SERVER.md
+[2]:https://mar-bi.github.io/mws-restaurant-stage-2/
+[3]:https://github.com/prettier/prettier-vscode
