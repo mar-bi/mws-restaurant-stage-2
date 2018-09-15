@@ -1,5 +1,5 @@
-//const SITE_PREFIX = 'https://mar-bi.github.io/mws-restaurant-stage-2/';
-const SITE_PREFIX = '/';
+const SITE_PREFIX = 'https://mar-bi.github.io/mws-restaurant-stage-2/';
+
 /**
  * Common database helper functions.
  */

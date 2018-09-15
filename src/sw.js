@@ -1,23 +1,22 @@
 self.importScripts('./js/idb.js');
 
-// Testing SW on localhost
-const APP_PREFIX = 'rest-rev-app';
-const staticCacheVersion = 'v6';
-const mapsCacheVersion = 'v6';
-const imgCacheVersion = 'v6';
+const APP_PREFIX = 'rest-rev-app-2';
+const staticCacheVersion = 'v3';
+const mapsCacheVersion = 'v3';
+const imgCacheVersion = 'v3';
 const staticCacheName = `${APP_PREFIX}-static-${staticCacheVersion}`;
 const contentMapCache = `${APP_PREFIX}-maps-${mapsCacheVersion}`;
 const contentImagesCache = `${APP_PREFIX}-imgs-${imgCacheVersion}`;
 const allCaches = [staticCacheName, contentMapCache, contentImagesCache];
 
-//const REPO_PREFIX = '/mws-restaurant-stage-2/';
+const REPO_PREFIX = '/mws-restaurant-stage-2/';
 const URLS = [
-  '/',
-  'restaurant.html',
-  'js/main.js',
-  'js/dbHelper.js',
-  'js/restaurantInfo.js',
-  'css/styles.css',
+  REPO_PREFIX,
+  `${REPO_PREFIX}restaurant.html`,
+  `${REPO_PREFIX}js/main.js`,
+  `${REPO_PREFIX}js/dbHelper.js`,
+  `${REPO_PREFIX}js/restaurantInfo.js`,
+  `${REPO_PREFIX}css/styles.css`,
   'https://unpkg.com/leaflet@1.3.1/dist/leaflet.css',
   'https://unpkg.com/leaflet@1.3.1/dist/leaflet.js'
 ];
@@ -63,13 +62,13 @@ self.addEventListener('fetch', event => {
   }
 
   //cache images
-  if (requestUrl.pathname.startsWith('/images/')) {
+  if (requestUrl.pathname.startsWith(`${REPO_PREFIX}images/`)) {
     event.respondWith(serveImgAssets(contentImagesCache, event.request));
     return;
   }
 
   //serve a restaurant page
-  if (requestUrl.pathname === '/restaurant.html') {
+  if (requestUrl.pathname === `${REPO_PREFIX}restaurant.html`) {
     event.respondWith(caches.match('restaurant.html'));
     return;
   }
