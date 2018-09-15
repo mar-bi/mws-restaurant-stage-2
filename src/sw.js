@@ -12,6 +12,7 @@ const contentMapCache = `${APP_PREFIX}-maps-${mapsCacheVersion}`;
 const contentImagesCache = `${APP_PREFIX}-imgs-${imgCacheVersion}`;
 const allCaches = [staticCacheName, contentMapCache, contentImagesCache];
 
+const REPO_PREFIX = '/';
 const URLS = [
   REPO_PREFIX,
   `${REPO_PREFIX}restaurant.html`,
