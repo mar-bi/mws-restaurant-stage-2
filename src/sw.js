@@ -24,27 +24,25 @@ const URLS = [
   'https://unpkg.com/leaflet@1.3.1/dist/leaflet.js'
 ];
 
-let DBPromise;
-
 /**
- * Cache static assets(html, css, js)
+ * Cache static assets(html, css, js) and create indexedDB
  */
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(staticCacheName).then(cache => {
-      return cache.addAll(URLS);
-    })
+    (async function() {
+      await createStaticCache();
+      await createAppDB();
+    })()
   );
 });
 
 /**
- * Delete old caches and create indexedDB
+ * Delete old caches
  */
 self.addEventListener('activate', event => {
   event.waitUntil(
     (async function() {
       await cleanCache();
-      await createAppDB();
     })()
   );
 });
@@ -93,6 +91,12 @@ self.addEventListener('fetch', event => {
   );
 });
 
+function createStaticCache() {
+  return caches.open(staticCacheName).then(cache => {
+    return cache.addAll(URLS);
+  });
+}
+
 function cleanCache() {
   return caches.keys().then(cacheNames => {
     return Promise.all(
@@ -122,25 +126,31 @@ function serveImgAssets(cacheName, eventRequest) {
 }
 
 function createAppDB() {
-  return (DBPromise = idb.open('mws-restaurants', 1, function(upgradeDB) {
+  return idb.open('mws-restaurants', 1, function(upgradeDB) {
     upgradeDB.createObjectStore('all-restaurants', { keyPath: 'id' });
-  }));
+  });
+}
+
+function getAppDB() {
+  return idb.open('mws-restaurants', 1);
 }
 
 function writeAppDB(dataObj) {
-  DBPromise.then(db => {
-    const tx = db.transaction('all-restaurants', 'readwrite');
-    const store = tx.objectStore('all-restaurants');
-    store.put({
-      id: 1,
-      data: dataObj
-    });
-    return tx.complete;
-  }).catch(err => console.log(err));
+  getAppDB()
+    .then(db => {
+      const tx = db.transaction('all-restaurants', 'readwrite');
+      const store = tx.objectStore('all-restaurants');
+      store.put({
+        id: 1,
+        data: dataObj
+      });
+      return tx.complete;
+    })
+    .catch(err => console.log(err));
 }
 
 function readAppDB() {
-  return DBPromise.then(db => {
+  return getAppDB().then(db => {
     return db
       .transaction('all-restaurants')
       .objectStore('all-restaurants')
@@ -150,11 +160,10 @@ function readAppDB() {
 
 async function serveJSON(eventRequest) {
   const dbData = await readAppDB();
-  const restaurants = dbData.length === 0 ? null : dbData[0].data;
+  const restaurants = dbData && dbData.length > 0 ? dbData[0].data : null;
   let fetchResponse;
 
   if (restaurants) {
-    console.log('restaurants from db', restaurants);
     return wrapIntoResponse(restaurants);
   }
 
